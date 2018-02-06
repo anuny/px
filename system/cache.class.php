@@ -1,6 +1,6 @@
 <?php defined('APP') or die;
 
-class Cache {
+class cache {
 	protected  $cache = NULL;
 	
     public function __construct( $config = array(), $type = 'memcache' ) {
@@ -61,7 +61,7 @@ class fileCache extends Cache{
 }
 
 // memcache
-class memcacheCache extends Cache{
+class memcacheCache extends cache{
 	private $mmc = NULL;
     private $group = ''; 
     private $ver = 0;

@@ -6,7 +6,8 @@ class commonController extends Controller
 {
 	public function _construct()
 	{
-		$admin = $this->Model->table('admin')->where("uname = 'admin'")->find();
+		$admin = $this->Model->table('user')->where("User = 'Password'")->find();
+
 		$this->View->assign('admin', $admin);
 		$url = $this->config['URL'];
 		$navs = array(

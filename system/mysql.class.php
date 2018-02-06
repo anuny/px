@@ -3,13 +3,15 @@ class Mysql {
 	private $_writeLink = NULL; //主
 	private $_readLink = NULL; //从
 	private $_replication = false; //标志是否支持主从
+	private $_dbhash="";
 	private $dbConfig = array();
-	public $sql = "";
+	public  $sql = "";
 	
 	public function __construct( $dbConfig = array() ){
 		$this->dbConfig = $dbConfig;
 	}
 	
+
 	//执行sql查询	
 	public function query($sql, $params = array()) {
 		foreach($params as $k => $v){
@@ -272,6 +274,10 @@ class Mysql {
 			}
 		}		
         mysql_select_db($db['DB_NAME'], $link);
+		
+		$dbConfig = $this->dbConfig;
+		$this->_dbhash  = md5($dbConfig['DB_HOST']. $dbConfig['DB_USER'] . $dbConfig['DB_PWD'] .$dbConfig['DB_PREFIX']. $dbConfig['DB_NAME']);
+		
         return $link;
 	}
 	

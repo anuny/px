@@ -5,22 +5,23 @@ define('STIME', microtime(true));
 
 // 目录名称
 $alia_maps = array(
-	'ROOT'       =>'root', // 根目录
-	'SYS'        =>'system', // 框架目录
-	'USR'        =>'application', // 用户目录
-	'APP'        =>'app', // 应用目录
-	'CONTROLLER' =>'controller', // 控制器目录
-	'MODEL'      =>'model', // 模型目录
-	'CONFIG_APP' =>'config', // 应用配置目录
-	'CONFIG_INC' =>'config', // 公共配置目录
-	'STATIC'     =>'static', // 静态文件目录
-	'THEME'      =>'theme', // 模板目录
-	'CACHE'      =>'cache', // 缓存目录
-	'CACHE_DATA' =>'cache_data', // 数据缓存目录
-	'CACHE_TPL'  =>'cache_tpl', // 模板缓存目录
-	'CACHE_SQL'  =>'cache_sql', // SQL缓存目录
-	'UPLOAD'     =>'upload', // 上传文件目录
-	'LIB'        =>'lib'// 类库目录
+	'ROOT'          =>'root', // 根目录
+	'SYS'           =>'system', // 框架目录
+	'USR'           =>'application', // 用户目录
+	'APP'           =>'app', // 应用目录
+	'CONTROLLER'    =>'controller', // 控制器目录
+	'MODEL'         =>'model', // 模型目录
+	'CONFIG_APP'    =>'config', // 应用配置目录
+	'CONFIG_INC'    =>'config', // 公共配置目录
+	'STATIC'        =>'static', // 静态文件目录
+	'THEME'         =>'theme', // 模板目录
+	'DATA'         =>'data', // 数据目录
+	'COMPILED'      =>'compiled', // 编译目录
+	'CACHE_DATA'    =>'cache_data', // 数据缓存目录
+	'CACHE_TPL'     =>'cache_tpl', // 模板缓存目录
+	'CACHE_SQL'     =>'cache_sql', // SQL缓存目录
+	'UPLOAD'        =>'upload', // 上传文件目录
+	'LIB'           =>'lib'// 类库目录
 );
 
 // 定义文件夹别名
@@ -47,9 +48,10 @@ define('DIR_CONFIG_APP',   DIR_APP.ALIAS_CONFIG_APP.DS);
 define('DIR_CONFIG_INC',   DIR_USR.ALIAS_CONFIG_INC.DS);
 define('DIR_STATIC',       DIR_USR.ALIAS_STATIC.DS);
 define('DIR_THEME',        DIR_USR.ALIAS_THEME.DS.APP.DS);
-define('DIR_CACHE',        DIR_USR.ALIAS_CACHE.DS);
-define('DIR_CACHE_DATA',   DIR_CACHE.ALIAS_CACHE_DATA.DS.APP.DS);
-define('DIR_CACHE_TPL',    DIR_CACHE.ALIAS_CACHE_TPL.DS.APP.DS);
-define('DIR_CACHE_SQL',    DIR_CACHE.ALIAS_CACHE_SQL.DS.APP.DS);
+define('DIR_DATA',         DIR_USR.ALIAS_DATA.DS);
+define('DIR_COMPILED',     DIR_DATA.ALIAS_COMPILED.DS.APP.DS);
+define('DIR_CACHE_DATA',   DIR_DATA.ALIAS_CACHE_DATA.DS.APP.DS);
+define('DIR_CACHE_TPL',    DIR_DATA.ALIAS_CACHE_TPL.DS.APP.DS);
+define('DIR_CACHE_SQL',    DIR_DATA.ALIAS_CACHE_SQL.DS.APP.DS);
 define('DIR_UPLOAD',       DIR_USR.ALIAS_UPLOAD.DS);
 define('DIR_LIB',          DIR_USR.ALIAS_LIB.DS);

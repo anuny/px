@@ -56,10 +56,10 @@ $config['DB_PWD']='root';
 $config['DB_PORT']=3306; 
 
 //数据库名
-$config['DB_NAME']='0851_tel'; 
+$config['DB_NAME']='mysql'; 
 
 //数据库前缀
-$config['DB_PREFIX']='0851_'; 
+$config['DB_PREFIX']=''; 
 
 //数据库编码，一般不需要修改
 $config['DB_CHARSET']='utf8'; 

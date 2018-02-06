@@ -12,12 +12,12 @@ class Model
 	{
 		$config = config::get();
 		$this->config = array(
-			'DB_HOST' => $config['DB_HOST'],
-			'DB_USER' => $config['DB_USER'],
-			'DB_PWD' => $config['DB_PWD'],
-			'DB_PORT' => $config['DB_PORT'],
-			'DB_NAME' => $config['DB_NAME'],
-			'DB_PREFIX' => $config['DB_PREFIX'],
+			'DB_HOST'    => $config['DB_HOST'],
+			'DB_USER'    => $config['DB_USER'],
+			'DB_PWD'     => $config['DB_PWD'],
+			'DB_PORT'    => $config['DB_PORT'],
+			'DB_NAME'    => $config['DB_NAME'],
+			'DB_PREFIX'  => $config['DB_PREFIX'],
 			'DB_CHARSET' => $config['DB_CHARSET']
 		);
 		$this->options['field'] = '*';	//默认查询字段
@@ -267,73 +267,123 @@ class Model
 }
 
 // 视图
-class View 
+class View
 {
-    /**
-     * 视图文件目录
-     * @var string
-     */
+	private $config = array();
+    private $data   = array();
     private $tplDir = '';
+	private $compiledDir = '';
+	private $cacheDir = '';
 	
-    /**
-     * 视图变量列表
-     * @var array
-     */
-    private $data = array();	
-	
-	
+
     public function __construct()
 	{
-		$this->cache = new Cache(); 
-		$theme = config::get('THEME');
-        $this->tplDir = DIR_THEME . $theme . DS;
+		$this->cache  = new Cache(); 
+		$this->config = config::get();
+        $this->tplDir = DIR_THEME . $this->config['THEME'] . DS;
+		$this->compiledDir = DIR_COMPILED;
+		$this->cacheDir = DIR_CACHE_TPL;
     }
 	
     /**
-     * 为视图引擎设置一个模板变量
-     * @param string $key 要在模板中使用的变量名
-     * @param mixed $value 模板中该变量名对应的值
-     * @return void
+     * 设置模板变量
      */
-    public function assign($key, $value) 
+    public function assign($k, $v) 
 	{
-        $this->data[$key] = $value;
+        $this->data[$k] = $v;
     }
+	
     /**
      * 渲染模板并输出
-     * @param null|string $tplFile 模板文件路径，相对于app/theme/文件的相对路径，不包含后缀名，例如index.index
-     * @return void
      */
     public function render($tplName) 
 	{
-		$uri = config::get('URI');
 		$tplName = trim($tplName);
+		
+		// 没有模板名
 		if(!$tplName){
-			$tplName = $uri['controller']. '.' . $uri['action'];
+			$tplName = $this->config['controller']. '.' . $this->config['action'];
 		};
-        $tplFile  = $this->tplDir . $tplName. '.html';
-		$cacheFile  = DIR_CACHE_TPL .$tplName.'.php';
-		$isCache = config::get('CACHE_TPL');
-		$cacheType = config::get('CACHE_TYPE');
+		
+		// 模板文件名
+		$tplFile  = $this->tplDir . $tplName. '.html';
+		
+		// 判断模板文件是否存在
+		if(!file_exists($tplFile)){
+			new Error('Error: 模板 '.$cacheFile.' 不存在！', 500) ;	
+		}
+		
+		// 编译文件名
+		$compileFile  = $this->compiledDir . $tplName. '.php';
+		
+		// 缓存文件名
+		$cacheFile  = $this->cacheDir . $tplName. '.html';
+
+		// 读取缓存
+		$isCache = $this->config['CACHE_TPL'];
 		if($isCache){
-			if(!file_exists($cacheFile) || @filemtime($tplFile) > @filemtime($cacheFile)) {
-				$compiled = $this->compile($tplFile);
-				$this->cache->write('tpl',DIR_CACHE_TPL,$tplName.'.php',$compiled);
+			if(file_exists($cacheFile) && file_exists($compileFile)){
+                //是否修改过编译文件或者模板文件
+                if(filemtime($cacheFile)>=filemtime($compileFile) && filemtime($compileFile)>filemtime($tplFile)){
+                    include $cacheFile;
+                    return;
+                }
+            }
+		}
+		
+
+		// 编译模板
+        if(!file_exists($compileFile) || (filemtime($compileFile) < filemtime($tplFile))){
+            $this->compile($tplName);
+        }
+		
+		// 导入数据
+		extract($this->data);
+
+		
+		//生成缓存文件
+		if($isCache){
+			
+			if(!is_dir($this->cacheDir) && !mk_dir($this->cacheDir)){
+				new Error('ERROR:"' . $tplName . '"缓存目录创建失败！', 500) ;
 			}
-			$tplFile = $cacheFile;
+			
+			ob_start();
+			include $compileFile;
+			// 获取缓冲区内容
+			$content = ob_get_contents();
+			
+			// 清除缓冲区
+			ob_end_clean();
+
+            file_put_contents($cacheFile,$content);
+			
+			//载入缓存文件
+            include $cacheFile;
+		}else{
+			//载入编译文件
+			include $compileFile;
 		}
 		unset($tplName);
-        extract($this->data);
-		file_exists($tplFile) ? include($tplFile) : new Error('模板:"' . $tplFile . '"不存在', 500) ;
 	}
 	
-	
-	protected function compile($tplFile)
+	protected function compile($tplName)
 	{
-		$str = file_get_contents($tplFile);
-		return $this->parse($str);
+		if(!is_dir($this->compiledDir) && !mk_dir($this->compiledDir)){
+			new Error('ERROR:"' . $tplName . '"编译目录创建失败！', 500) ;
+		}
+		$tplFile  = $this->tplDir . $tplName. '.html';
+		$compileFile  = $this->compiledDir . $tplName. '.php';
+		$content = file_get_contents($tplFile);
+		$content = $this->parse($content);
+		if(!file_put_contents($compileFile, $content)){
+			new Error('ERROR:"' . $tplName . '"编译失败！', 500) ;
+		}
 	}
 	
+	/**
+     * 解析模板
+     */
 	protected function parse($tpl)
 	{
 		$tpl = preg_replace("/([\n\r]+)\t+/s","\\1",$tpl);
@@ -362,12 +412,13 @@ class Controller
 {
     public function __construct()
 	{
-		$this->data = array();
-		$this->uri = config::get('URI');
-		$this->cache = new Cache();
-        $this->View =  new View();
-		$this->Model = new Model();
+		$this->data   = array();
 		$this->config = config::get();
-		if(method_exists($this, '_construct')) $this->_construct();
+		$this->cache  = new Cache();
+		$this->Model  = new Model();
+        $this->View   = new View();
+		if(method_exists($this, '_construct')){
+			 $this->_construct();
+		}
     }
 }

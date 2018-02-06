@@ -83,7 +83,7 @@ function addquote($var){
  * 写文件
  *
  */
-function cwritefile($file,$data,$mode = "wb") {
+function writeFile($file,$data,$mode = "wb") {
 	if(!is_writable($file)) {
 		$ch  = @chmod($file,"0755");
 	}

@@ -27,7 +27,6 @@ class model
 	//连接数据库
 	public function connect() 
 	{
-		require_once( dirname(__FILE__) . '/mysql.class.php' );
 		$this->db = new mysql( $this->config );	//实例化数据库驱动类	
 	}
 	

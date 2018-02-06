@@ -5,6 +5,7 @@
 class indexController extends commonController {
 
     public function index(){
+		$this->view->assign('title','test');
 		$this->view->assign('test','test');
 		$this->view->render('index');
     }

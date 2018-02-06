@@ -1,7 +1,7 @@
 <?php defined('APP') or die;
 
 //错误类
-class error extends Exception 
+class Error extends Exception 
 {
     private $errorMessage = '';
     private $errorFile = '';
@@ -35,7 +35,7 @@ class error extends Exception
 	//输出错误信息
      protected function showError($url){
 		 
-		$view = new View();
+		$view = new view();
 		 
 		//错误页面重定向
 		if($error_url != ''){

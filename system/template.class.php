@@ -1,7 +1,7 @@
 <?php defined('APP') or die;
 
 // 视图
-class template
+class Template
 {
     public function __construct()
 	{

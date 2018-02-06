@@ -10,7 +10,7 @@
 define('APP', 'index');
 
 // 载入框架
-require('../system/px.class.php');
+require('../system/App.class.php');
 
 // 运行系统
 app::init()->run(); 

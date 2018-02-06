@@ -5,10 +5,10 @@ class Controller
     public function __construct()
 	{
 		$this->data   = array();
-		$this->config = config::get();
-		$this->cache  = new cache();
-		$this->model  = new model();
-        $this->view   = new view();
+		$this->config = Config::get();
+		$this->Cache  = new Cache();
+		$this->Model  = new Model();
+        $this->View   = new View();
 		if(method_exists($this, '_construct')){
 			 $this->_construct();
 		}

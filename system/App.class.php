@@ -3,7 +3,7 @@
 // 加载全局目录配置
 require_once('common.path.php');
 
-class app
+class App
 {
 	// 单列模式
 	private static $instance; 
@@ -15,17 +15,18 @@ class app
 		define('APP_VER', '0.0.1');
 		
 		//载入默认配置类
-        require_once('config.class.php');
+        require_once('Config.class.php');
 
 		//载入公共配置
 		require_once(DIR_CONFIG_INC.'config.inc.php');
 		
 		// 载入应用配置
 		$app_config_file = DIR_CONFIG_APP.'config.php';
-		if(file_exists($app_config_file)) require_once($app_config_file);
+		$this->extRequire($app_config_file);
+		
 
 		//参数配置
-		$config = array_merge(config::get(), $config);
+		$config = array_merge(Config::get(), $config);
 		
 		defined('DEBUG') or define('DEBUG', $config['DEBUG']);
 		
@@ -43,31 +44,48 @@ class app
         if($config['USE_SESSION']) session_start();
 		
 		//参数配置
-		config::set($config);
+		Config::set($config);
 
 		// 载入错误类
-		require_once('error.class.php');
+		require_once('Error.class.php');
 		
 		// 加载常用函数库
-		require_once('common.function.php');
+		require_once('Com.function.php');
 		
+		// 载入自定义函数
+		$app_function_file = DIR_LIB.'app.function.php';
+		$this->extRequire($app_function_file);
+
 		// 路由
-		$this->uri = parseUrl();
+		$uri = parseUrl();
 
-		config::set('URI',$this->uri);
+		// 载入错误类
+		require_once('Uri.class.php');
+		$URI = new Uri();
 		
-		$app = config::get('URL_REWRITE') ? APP : APP.'.php';
+		$uri = $URI::uri;
+		$url = $URI::url;
 
+		config::set('URI',$uri);
+		
 		// 获取地址
-		$url = getURLS();
-
 		config::set('URL',$url);
+
 		
 		// 载入控制类
 		require_once('mvc.class.php');
 		
 		//注册类的自动加载
 		spl_autoload_register( array($this, 'autoload') );
+    }
+	
+	private function extRequire($path)
+	{
+		if(file_exists($path)) {
+			require_once($path);
+			return true;
+		}
+		return false;
     }
 
 	// 初始化
@@ -108,6 +126,8 @@ class app
 			$classPath = DIR_SYS;//加载系统扩展
 		}
 		$classPath .= $class. '.class.php';
-		file_exists($classPath) ? require_once($classPath) : new Error('Controller File:"'.APP . DS . $class . '"does not exist', 404) ;
+		if(!$this->extRequire($classPath)){
+			new Error('Controller File:"'.APP . DS . $class . '"does not exist', 404) ;
+		}
     }
 }

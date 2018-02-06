@@ -1,7 +1,7 @@
 <?php defined('APP') or die;
 
 // 模型
-class model 
+class Model 
 {
     public  $db  = NULL; // 当前数据库操作对象
 	public  $sql = '';	//sql语句，主要用于输出构造成的sql语句

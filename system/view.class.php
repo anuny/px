@@ -1,7 +1,7 @@
 <?php defined('APP') or die;
 
 // 视图
-class view
+class View
 {
 	private $config = array();
     private $data   = array();

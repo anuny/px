@@ -1,6 +1,6 @@
 <?php defined('APP') or die;
 
-class cache {
+class Cache {
 	protected  $cache = NULL;
 	
     public function __construct( $config = array(), $type = 'memcache' ) {

@@ -1,9 +1,10 @@
 <?php defined('APP') or die; ?>
 {include header} 
+<!--include file="header"--> 
 <body style="padding-top:70px">
   <div class="container">
     <div class="jumbotron">
-        <h1>{$test}</h1>
+        <h1>{$test}</h1>  
         <p>This is a template showcasing the optional theme stylesheet included in Bootstrap. Use it as a starting point to create something more unique by building on or modifying it.</p>
       </div>
     <div class="starter-template">
@@ -12,10 +13,12 @@
     </div>
 	{$admin['uname']} Email: {$admin['email']}
   </div>
-  <footer class="footer">
+  <footer class="footer">       
     <div class="container">
       <p class="text-muted">Done in :<span class="user">{$runtime()} second(s)</span> &nbsp;&nbsp; {$date("Y-m-d G:i T",time())}</p>
     </div>
   </footer>
 </body> 
-</html>
+</html>       
+
+{$test::index()}    

@@ -1,7 +1,12 @@
 .user{
-	color:#f00;
+	color:#fff;
+	background:#FF8282;
 }
 
+.test{
+	background:#ddd;
+	color:#666;
+}
 .bom-list .floder{
 	margin-top:10px;
 }

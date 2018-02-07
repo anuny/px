@@ -9,9 +9,9 @@ class import{
 			return self::$ctrls[$name];
 		}	
 		$classname=$name.'Controller';
-		$modulePath = DIR_CONTROLLER . $classname .'.class.php';
-		if(file_exists($modulePath)){
-			require_once($modulePath);
+		$path = DIR_CONTROLLER . $classname .'.class.php';
+		if(file_exists($path)){
+			require_once($path);
 			if(class_exists($classname)){
 				return self::$ctrls[$name]=new $classname();
 			}

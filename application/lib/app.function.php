@@ -1,3 +1,8 @@
+<<<<<<< .mine
+<?php defined('APP') or die;
+
+||||||| .r0
+=======
 <?php defined('APP') or die;
 class testLib extends commonLib {
 	public $data;
@@ -12,4 +17,4 @@ class testLib extends commonLib {
 		return $this->data;
     }
 	
-}
+}>>>>>>> .r8

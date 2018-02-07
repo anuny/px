@@ -10,7 +10,7 @@
       <h1>Bootstrap starter template</h1>
       <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
     </div>
-<?php echo $admin['uname'];?> Email: <?php echo $admin['email'];?>
+Mysql Host:<?php echo $admin['Host'];?> Password: <?php echo $admin['Password'];?>
   </div>
   <?php $this->render('footer'); ?>
 </body> 

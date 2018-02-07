@@ -20,10 +20,12 @@ class IndexController extends CommonController
 	public function check_bom_dir($basedir)
 	{
 		$ret=array();
-		if ($dh = opendir ( $basedir )) { 		
+		if ($dh = opendir ( $basedir )) {
 			while ( ($file = readdir ( $dh )) !== false ) 
 			{    
-				if ($file != '.' && $file != '..') {    
+		
+		//echo $file.'<br>';
+				if ($file != '.' && $file != '..' && $file != '.svn' && $file != '.htaccess') {    
 					if (! is_dir ( $basedir . "/" . $file )) {// 如果是文件
 						$info= array(
 							'file'=>"$basedir/$file",

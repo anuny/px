@@ -2,14 +2,7 @@
 
 class uri
 {
-	public $uri = array();
-	public $url = array();
-	
-    public function __construct(){
-		$this->setUri();
-		$this->setUrl();
-    }
-	private function getUri()
+	public static function getUri()
 	{
 		if ( ! isset($_SERVER['REQUEST_URI']) OR ! isset($_SERVER['SCRIPT_NAME'])) {
 			return '';
@@ -36,18 +29,12 @@ class uri
 		return str_replace(array('//', '../'), '/', trim($uri, '/'));
        
     }
-	
 
-
-	private function setUri()
+	public static function get()
 	{	
 		$config =config::get();
-		$url = $this->getUri();
-		
-		$controller = 'index';
-		$action = 'index';
-		
-		
+		$url = self::getUri();
+
 		//去除问号后面的查询字符串
 		if ( $url && false !== ($pos = @strrpos($url, '?')) ) {
 			$url = substr($url,0,$pos);
@@ -61,11 +48,11 @@ class uri
 		$flag=0;
 		//获取控制器名称
 		if ( $url && ($pos = @strpos($url, $config['URL_DEPR'], 1) )>0 ) {
-			$controller = substr($url,0,$pos);//控制器名
+			$app = substr($url,0,$pos);//控制器名
 			$url = substr($url,$pos+1);//除去控制器名称，剩下的url字符串
 			$flag = 1;//标志可以正常查找到控制器
 		} else {	//如果找不到控制器分隔符，以当前网址为控制器名
-			$controller = $url;
+			$app = $url;
 		}
 		
 		
@@ -73,19 +60,33 @@ class uri
 		$flag2=0;//用来表示是否需要解析参数
 		//获取操作方法名称
 		if($url&&($pos=@strpos($url,$config['URL_DEPR'],1))>0) {
-			$action = substr($url, 0, $pos);//方法名
+			$controller = substr($url, 0, $pos);//方法名
 			$url = substr($url, $pos+1);
 			$flag2 = 1;//表示需要解析参数
 		} else {
 			//不能找不到方法，把剩下的网址当作参数处理
 			if($flag){
+				$controller=$url;
+			}
+		}
+		
+		
+		$flag3=0;//用来表示是否需要解析参数
+		//获取操作方法名称
+		if($url&&($pos=@strpos($url,$config['URL_DEPR'],1))>0) {
+			$action = substr($url, 0, $pos);//模块
+			$url = substr($url, $pos+1);
+			$flag3 = 1;//表示需要解析参数
+		} else {
+			//只有可以正常查找到模块之后，才能把剩余的当作操作来处理
+			//因为不能找不到模块，已经把剩下的网址当作模块处理了
+			if($flag2){
 				$action=$url;
 			}
 		}
-
 		
 		//解析参数
-		if($flag2) {
+		if($flag3) {
 			$param = explode($config['URL_PARAM_DEPR'], $url);
 			$param_count = count($param);
 			for($i=0; $i<$param_count; $i=$i+2) {			
@@ -98,10 +99,10 @@ class uri
 				}
 			}	
 		}
-
-		$controller = $controller !='' ? $controller : 'index';
-		$action = $action !='' ? $action : 'index';
-		$this->uri = array('controller'=>$controller,'action'=>$action,'get'=>$_GET);	
+		if(!isset($app)) $app = 'index';
+		if(!isset($controller)) $controller = 'index';
+		if(!isset($action)) $action = 'index';
+		return array(ALIAS_APP=>$app,ALIAS_CONTROLLER=>$controller,'action'=>$action,'get'=>$_GET);	
     }
 	
 	private function setUrl()

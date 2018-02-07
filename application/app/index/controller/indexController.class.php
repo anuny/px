@@ -8,6 +8,8 @@ class indexController extends commonController {
 		$this->view->assign('title','test');
 		$this->view->assign('test','test');
 		$this->view->render('index');
+		
+		
     }
 	
 	

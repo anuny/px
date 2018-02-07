@@ -1,7 +1,7 @@
 <?php defined('APP') or die;
 
 //错误类
-class Error extends Exception 
+class error extends Exception 
 {
     private $errorMessage = '';
     private $errorFile = '';

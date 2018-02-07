@@ -1,11 +1,11 @@
 <?php defined('APP') or die;
 
-class Uri
+class uri
 {
 	public static $uri = array();
 	public static $url = array();
 	
-    private function __construct(){
+    public function __construct(){
 		$this->setUri();
 		$this->setUrl();
     }
@@ -102,7 +102,7 @@ class Uri
 
 		$controller = $controller !='' ? $controller : 'index';
 		$action = $action !='' ? $action : 'index';
-		self::uri = array('controller'=>$controller,'action'=>$action,'get'=>$_GET);	
+		self::$uri = array('controller'=>$controller,'action'=>$action,'get'=>$_GET);	
     }
 	
 	private function setUrl()

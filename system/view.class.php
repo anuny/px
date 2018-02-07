@@ -7,16 +7,13 @@ class View
     private $data   = array();
     private $tplDir = '';
 	private $compiledDir = '';
-	private $cacheDir = '';
 	
 
     public function __construct()
 	{
-		$this->cache  = new cache(); 
 		$this->config = config::get();
         $this->tplDir = DIR_THEME . $this->config['THEME'] . DS;
 		$this->compiledDir = DIR_COMPILED;
-		$this->cacheDir = DIR_CACHE_TPL;
     }
 	
     /**
@@ -44,86 +41,53 @@ class View
 		
 		// 判断模板文件是否存在
 		if(!file_exists($tplFile)){
-			new Error('Error: 模板 '.$cacheFile.' 不存在！', 500) ;	
+			new error('Error: 模板 '.$cacheFile.' 不存在！', 500) ;	
 		}
 		
 		// 编译文件名
 		$compileFile  = $this->compiledDir . $tplName. '.php';
-		
-		// 缓存文件名
-		$cacheFile  = $this->cacheDir . $tplName. '.html';
-
-		// 读取缓存
-		$isCache = $this->config['CACHE_TPL'];
-		if($isCache){
-			if(file_exists($cacheFile) && file_exists($compileFile)){
-                //是否修改过编译文件或者模板文件
-                if(filemtime($cacheFile)>=filemtime($compileFile) && filemtime($compileFile)>filemtime($tplFile)){
-                    include $cacheFile;
-                    return;
-                }
-            }
-		}
-		
-
 		// 编译模板
         if(!file_exists($compileFile) || (filemtime($compileFile) < filemtime($tplFile))){
-            $this->compile($tplName);
+			$path = dirname($compileFile);
+			if(!is_dir($path) && !util::mk_dir($path)){
+				new Error('ERROR:"' . $tplName . '"编译目录创建失败！', 500) ;
+			}
+		
+			$content = file_get_contents($tplFile);
+			$content = $this->parse($content);
+			print_r($content);
+            if(!file_put_contents($compileFile, $content)){
+				new error('ERROR:"' . $tplName . '"编译失败！', 500) ;
+			}
         }
 		
 		// 导入数据
 		extract($this->data);
 
+		//载入编译文件
+		include $compileFile;
 		
-		//生成缓存文件
-		if($isCache){
-			
-			if(!is_dir($this->cacheDir) && !mk_dir($this->cacheDir)){
-				new Error('ERROR:"' . $tplName . '"缓存目录创建失败！', 500) ;
-			}
-			
-			ob_start();
-			include $compileFile;
-			// 获取缓冲区内容
-			$content = ob_get_contents();
-			
-			// 清除缓冲区
-			ob_end_clean();
-
-            file_put_contents($cacheFile,$content);
-			
-			//载入缓存文件
-            include $cacheFile;
-		}else{
-			//载入编译文件
-			include $compileFile;
-		}
 		unset($tplName);
 	}
-	
-	protected function compile($tplName)
-	{
-		if(!is_dir($this->compiledDir) && !mk_dir($this->compiledDir)){
-			new Error('ERROR:"' . $tplName . '"编译目录创建失败！', 500) ;
-		}
-		$tplFile  = $this->tplDir . $tplName. '.html';
-		$compileFile  = $this->compiledDir . $tplName. '.php';
-		$content = file_get_contents($tplFile);
-		$content = $this->parse($content);
-		if(!file_put_contents($compileFile, $content)){
-			new Error('ERROR:"' . $tplName . '"编译失败！', 500) ;
-		}
-	}
-	
+
+
 	/**
      * 解析模板
      */
 	protected function parse($tpl)
 	{
+		//替换载入模板
+		
+		
+		
 		$tpl = preg_replace("/([\n\r]+)\t+/s","\\1",$tpl);
 		$tpl = preg_replace("/\<\!\-\-\{(.+?)\}\-\-\>/s", "{\\1}",$tpl);
-		$tpl = preg_replace("/\{url\s+(\S+)\}/","<?php echo getUrl('\\1');?>",$tpl);
-		$tpl = preg_replace("/\{include\s+(.+)\}/","<?php \$this->render('\\1'); ?>",$tpl);
+		$tpl = preg_replace("/\{url\s+(\S+)\}/","<?php echo util::getUrl('\\1');?>",$tpl);
+		
+		$tpl = preg_replace('/<!--#include\s*file=[\"|\'](.*)[\"|\']-->/iU',"<?php \$this->render('$1'); ?>", $tpl);
+		$tpl = preg_replace("/\{include\s+(.+)\}/","<?php \$this->render('\\1'); ?>",$tpl);		
+		
+		
 		$tpl = preg_replace("/\{php\s+(.+)\}/","\n<?php \\1?>",$tpl);
 		$tpl = preg_replace("/\{if\s+(.+?)\}/","<?php if(\\1) { ?>",$tpl);
 		$tpl = preg_replace("/\{else\}/","<?php } else { ?>",$tpl);
@@ -133,10 +97,18 @@ class View
 		$tpl = preg_replace("/\{foreach\s+(\S+)\s+(\S+)\s+(\S+)\}/","<?php if(is_array(\\1)) foreach(\\1 AS \\2 => \\3){?>",$tpl);
 		$tpl = preg_replace("/\{\/foreach\}/","<?php }?>",$tpl);
 		$tpl = preg_replace("/\{([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*\(([^{}]*)\))\}/","<?php echo \\1;?>",$tpl);
-		$tpl = preg_replace("/\{\\$([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*\(([^{}]*)\))\}/","<?php echo \\1;?>",$tpl);
-		$tpl = preg_replace("/\{(\\$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)\}/","<?php echo \\1;?>",$tpl);
-		$tpl = preg_replace("/\{(\\$[a-zA-Z0-9_\[\]\'\"\$\x7f-\xff]+)\}/es", "addquote('<?php echo \\1;?>')",$tpl);
-		$tpl = preg_replace("/\{([A-Z_\x7f-\xff][A-Z0-9_\x7f-\xff]*)\}/s", "<?php echo \\1;?>",$tpl);
+		$tpl = preg_replace("/\{\\$([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*\(([^{}]*)\))\}/","<?php echo \\1;?>",$tpl); // 函数
+		$tpl = preg_replace("/\{(\\$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)\}/","<?php echo \\1;?>",$tpl); // 变量
+		$tpl = preg_replace("/\{(\\$[a-zA-Z0-9_\[\]\'\"\$\x7f-\xff]+)\}/es", "util::addquote('<?php echo \\1;?>')",$tpl);
+		$tpl = preg_replace("/\{([A-Z_\x7f-\xff][A-Z0-9_\x7f-\xff]*)\}/s", "<?php echo \\1;?>",$tpl); // 数组对象
+		
+		$tpl = preg_replace ( "/\{(\\$[a-z0-9_]+)\.([a-z0-9_]+)\}/i", "<?php echo $1['$2']; ?>", $tpl);
+		$tpl = preg_replace ( "/\{(\\$[a-z0-9_]+)\.([a-z0-9_]+)\.([a-z0-9_]+)\}/i", "<?php echo $1[\'$2\'][\'$3\']; ?>", $tpl);
+		
+		$tpl = preg_replace ( "/\{(\\$[a-z0-9_]+)\::([a-z0-9_]+)\}/i", "<?php $1::$2; ?>", $tpl);
+		$tpl = preg_replace ( "/\{(\\$[a-z0-9_]+)\::([a-z0-9_]+)\.([a-z0-9_]+)\}/i", "<?php echo $1::\'$2\'][\'$3\']; ?>", $tpl);
+	
+	
 		return $tpl;
 	}
 }

@@ -1,11 +1,10 @@
 <?php defined('APP') or die;
-
 class Cache {
 	protected  $cache = NULL;
 	
     public function __construct( $config = array(), $type = 'memcache' ) {
 		$class = $type.'Cache';
-		$this->cache = new $class( $config );
+		//$this->cache = new $class( $config );
     }
 
 	//读取缓存

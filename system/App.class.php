@@ -1,9 +1,9 @@
 <?php defined('APP') or die;
 
 // 加载全局目录配置
-require_once('common.path.php');
+require_once('com.define.php');
 
-class App
+class app
 {
 	// 单列模式
 	private static $instance; 
@@ -15,18 +15,17 @@ class App
 		define('APP_VER', '0.0.1');
 		
 		//载入默认配置类
-        require_once('Config.class.php');
+        require_once('config.class.php');
 
 		//载入公共配置
 		require_once(DIR_CONFIG_INC.'config.inc.php');
 		
 		// 载入应用配置
-		$app_config_file = DIR_CONFIG_APP.'config.php';
-		$this->extRequire($app_config_file);
+		$this->extRequire(DIR_CONFIG_APP.'config.php');
 		
 
 		//参数配置
-		$config = array_merge(Config::get(), $config);
+		$config = array_merge(config::get(), $config);
 		
 		defined('DEBUG') or define('DEBUG', $config['DEBUG']);
 		
@@ -44,34 +43,27 @@ class App
         if($config['USE_SESSION']) session_start();
 		
 		//参数配置
-		Config::set($config);
+		config::set($config);
 
 		// 载入错误类
-		require_once('Error.class.php');
+		require_once('error.class.php');
 		
-		// 加载常用函数库
-		require_once('Com.function.php');
+		// 加载工具类
+		require_once('util.class.php');
 		
 		// 载入自定义函数
 		$app_function_file = DIR_LIB.'app.function.php';
 		$this->extRequire($app_function_file);
 
-		// 路由
-		$uri = parseUrl();
-
-		// 载入错误类
-		require_once('Uri.class.php');
-		$URI = new Uri();
+		// 载入路由类
+		require_once('uri.class.php');
+		$uri = new uri();
 		
-		$uri = $URI::uri;
-		$url = $URI::url;
-
-		config::set('URI',$uri);
+		config::set('URI',$uri::$uri);
 		
 		// 获取地址
-		config::set('URL',$url);
+		config::set('URL',$uri::$url);
 
-		
 		// 载入控制类
 		require_once('mvc.class.php');
 		
@@ -79,14 +71,7 @@ class App
 		spl_autoload_register( array($this, 'autoload') );
     }
 	
-	private function extRequire($path)
-	{
-		if(file_exists($path)) {
-			require_once($path);
-			return true;
-		}
-		return false;
-    }
+	
 
 	// 初始化
 	public static function init()
@@ -99,35 +84,54 @@ class App
     public function run()
 	{
 		// 检测模块
-		if(!file_exists(DIR_APP)) new Error('Application:"'.APP.'"does not exist',404) ;		
+		if(!file_exists(DIR_APP)) {
+			new error('Application:"'.APP.'"does not exist',404) ;
+		}
+		
+		$uri = config::get('URI');
 
 		// 检测控制器
-		$controller = $this->uri['controller'];
+		$controller = $uri['controller'];
 		$controllerClass = $controller.'Controller';
-        if(!class_exists($controllerClass)) new Error("Controller:$controller does not exist",404) ; 
+        if(!class_exists($controllerClass)){
+			new error("Controller:$controller does not exist",404) ; 
+		}
         $controller = new $controllerClass();
 		
 		// 检测方法
-		$action = $this->uri['action'];
-        if(!method_exists($controller, $action)) new Error("Action:$action Controller",404) ;
+		$action = $uri['action'];
+		
+        if(!method_exists($controller, $action)){
+			new error("Action:$action Controller",404) ;
+		}
         call_user_func(array($controller,$action));
     }
 	
 	// 自动加载函数
     private function autoload($class)
 	{
-		if(substr($class, -10) == ufirst(ALIAS_CONTROLLER) ){// 加载控制器 
+		if(substr($class, -10) == util::ucfirst(ALIAS_CONTROLLER) ){// 加载控制器 
 			$classPath = DIR_CONTROLLER;
-		}else if(substr($class, -5) == ufirst(ALIAS_MODEL)){ // 加载模型
+		}else if(substr($class, -5) == util::ucfirst(ALIAS_MODEL)){ // 加载模型
 			$classPath = DIR_MODEL;	
-		}else if(substr($class, -3) == ufirst(ALIAS_LIB)){ // 加载用户扩展
+		}else if(substr($class, -3) == util::ucfirst(ALIAS_LIB)){ // 加载用户扩展
 			$classPath = DIR_LIB;	
 		}else{
 			$classPath = DIR_SYS;//加载系统扩展
 		}
 		$classPath .= $class. '.class.php';
+		
 		if(!$this->extRequire($classPath)){
-			new Error('Controller File:"'.APP . DS . $class . '"does not exist', 404) ;
+			
+			new error('Controller File:"'.APP . DS . $class . '"does not exist', 404) ;
 		}
+    }
+	private function extRequire($path)
+	{
+		if(file_exists($path)) {
+			require_once($path);
+			return true;
+		}
+		return false;
     }
 }

@@ -1,7 +1,7 @@
 <?php defined('APP') or die;
 
 //配置类
-class Config
+class config
 {
 	static public $config=array(	
 		'DEBUG' => true,// 开启调试模式

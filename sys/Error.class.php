@@ -43,10 +43,7 @@ class Error extends Exception
 		}
 		@header("HTTP/1.1 $this->errorCode Not Found");
 
-		$theme =  Config::get('THEME');
-		
-		$errorTpl = DIR_THEME . $theme.DS.'error.php';
-		
+		$errorTpl = DIR_THEME_APP.Config::get('THEME').DS.'error.php';
 		
 		if (file_exists($errorTpl)) {
 			$view->assign('error',array('code' => $this->errorCode,'message' => $this->errorMessage,'trace' => $this->trace));
@@ -62,7 +59,7 @@ class Error extends Exception
 			<title>Error</title>
 			</head>
 			<body>
-			<h1>'.$this->errorCode.'</h1>';
+			<h1>'.$this->errorCode.' Error</h1>';
 			echo $info;
 			echo '<p><a href="javascript:history.back()" >返回</a></p> 
 			</body>

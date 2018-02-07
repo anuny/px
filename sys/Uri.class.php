@@ -44,24 +44,24 @@ class Uri
 		}
 		
 		$flag=0;
-		//获取控制器名称
+		//获取模块名称
 		if ( $url && ($pos = @strpos($url, URL_DEPR, 1) )>0 ) {
-			$app = substr($url,0,$pos);//控制器名
-			$url = substr($url,$pos+1);//除去控制器名称，剩下的url字符串
-			$flag = 1;//标志可以正常查找到控制器
-		} else {	//如果找不到控制器分隔符，以当前网址为控制器名
+			$app = substr($url,0,$pos);//模块名
+			$url = substr($url,$pos+1);//除去模块名称，剩下的url字符串
+			$flag = 1;//标志可以正常查找到模块
+		} else {	//如果找不到模块分隔符，以当前网址为模块名
 			$app = $url;
 		}
 		
 
-		$flag2=0;//用来表示是否需要解析参数
-		//获取操作方法名称
+		$flag2=0;
+		//获取控制器名称
 		if($url&&($pos=@strpos($url,URL_DEPR,1))>0) {
-			$controller = substr($url, 0, $pos);//方法名
-			$url = substr($url, $pos+1);
-			$flag2 = 1;//表示需要解析参数
+			$controller = substr($url, 0, $pos);//控制器名
+			$url = substr($url, $pos+1);//除去控制器名称，剩下的url字符串
+			$flag2 = 1;//表示需要解析方法
 		} else {
-			//不能找不到方法，把剩下的网址当作参数处理
+			//不能找到控制器，把剩下的网址当作控制器名
 			if($flag){
 				$controller=$url;
 			}
@@ -71,12 +71,12 @@ class Uri
 		$flag3=0;//用来表示是否需要解析参数
 		//获取操作方法名称
 		if($url&&($pos=@strpos($url,URL_DEPR,1))>0) {
-			$action = substr($url, 0, $pos);//模块
+			$action = substr($url, 0, $pos);//方法名
 			$url = substr($url, $pos+1);
 			$flag3 = 1;//表示需要解析参数
 		} else {
-			//只有可以正常查找到模块之后，才能把剩余的当作操作来处理
-			//因为不能找不到模块，已经把剩下的网址当作模块处理了
+			//只有可以正常查找到方法之后，才能把剩余的当作参数来处理
+			//因为不能找不到方法，已经把剩下的网址当作参数处理了
 			if($flag2){
 				$action=$url;
 			}

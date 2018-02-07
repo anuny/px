@@ -1,7 +1,7 @@
 <?php defined('APP') or die;
 class App
 {
-	//框架版本号
+	// 版本号
 	public static $version = '0.0.1';
 	
 	// 单列模式
@@ -40,7 +40,7 @@ class App
 		$controllerName = $uri['controller'];
 		$controllerClass = $controllerName.'Controller';
         if(!class_exists($controllerClass)){
-			new Error("Controller:$controllerName does not exist",500) ; 
+			new Error('Controller: "'.$controllerName.'"  does not exist',500) ; 
 		}
 		
         $controller = new $controllerClass();
@@ -48,7 +48,7 @@ class App
 		// 检测方法
 		$action = $uri['action'];
         if(!method_exists($controller, $action)){
-			new Error("Action:$action does not exist",500) ;
+			new Error('Action: "'.$action.' "does not exist',500) ;
 		}
 		call_user_func(array($controller,$action));
 	}
@@ -56,14 +56,12 @@ class App
 
 	private static function initConfig()
 	{
-		
 		// 加载全局目录配置
 		require_once('com.define.php');
 		
 		// 载入路由类
 		require_once('uri.class.php');
 
-		
 		// 获取 应用/控制器/方法/参数
 		$uri = Uri::get();
 		$app_name = $uri[NAME_APP];
@@ -144,7 +142,7 @@ class App
 	// 自动加载
     private static function loader($className)
 	{
-		$dirs = array(	DIR_CTRL,DIR_LIB,DIR_SYS,DIR_MODEL);
+		$dirs = array(DIR_CTRL,DIR_LIB,DIR_SYS,DIR_MODEL);
 		foreach($dirs as $dir) {
 			$file = $dir . $className . '.class.php';
 			if ( is_file($file) ) {   

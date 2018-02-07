@@ -51,13 +51,13 @@ class View
         if(!file_exists($compileFile) || (filemtime($compileFile) < filemtime($tplFile))){
 			$path = dirname($compileFile);
 			if(!is_dir($path) && !Helper::mk_dir($path)){
-				new Error('ERROR:"' . $tplName . '"编译目录创建失败！', 500) ;
+				new Error('Error:"' . $tplName . '"编译目录创建失败！', 500) ;
 			}
 		
 			$content = file_get_contents($tplFile);
 			$content = $this->parse($content);
             if(!file_put_contents($compileFile, $content)){
-				new error('ERROR:"' . $tplName . '"编译失败！', 500) ;
+				new error('Error:"' . $tplName . '"编译失败！', 500) ;
 			}
         }
 		

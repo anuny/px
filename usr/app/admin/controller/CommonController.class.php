@@ -11,7 +11,7 @@ class CommonController extends Controller
 		
 		$url = $this->config['URL'];
 		$navs = array(
-			array('name'=>'首页','url'=>$url['APP']),
+			array('name'=>'首页','url'=>$url['APP'].'.html'),
 			array('name'=>'清除BOM','url'=>$url['APP'].'/index/clean_bom.html'),
 			array('name'=>'清除缓存','url'=>$url['APP'].'/tool.html')
 		);

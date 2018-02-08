@@ -21,8 +21,8 @@ a:hover {text-decoration: underline;}
 <body>
 <div class="ip-attack">
   <dl>
-    <dt style="font-size:18px">{$error['message']}</dt>
-	<dt style="font-size:12px;padding:10px 0">{$error['trace']}</dt>
+    <dt style="font-size:18px"><?php echo $error['message'];?></dt>
+<dt style="font-size:12px;padding:10px 0"><?php echo $error['trace'];?></dt>
     <dt><a href="javascript:history.back()" >返回</a></dt>
   </dl>
 </div>

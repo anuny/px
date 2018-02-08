@@ -20,11 +20,14 @@ class BaseController extends Controller
 		);
 		
 		$this->assign('test',$this->test());
-		//$this->assign('runtime',Helper::runtime());
-		$this->assign('runtime',123);
+		$this->assign('runtime',self::runtime());
 		$this->assign('title','后台管理');
 		$this->assign('logo','PXCMS');
 		$this->assign('navs',$navs);
+		
+		
+		
+		
 	}
 	
 	public function test()

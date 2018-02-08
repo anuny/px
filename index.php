@@ -6,8 +6,8 @@
  * @copyright  Copyright (c) 2018 Anuny 
  * @license pxcms is opensource software licensed under the MIT license.
  */
- 
-class App
+
+class App 
 {
 	// 版本号
 	public static $version = '0.0.1';
@@ -21,23 +21,23 @@ class App
     private function __construct(){
 		
 		// 全局目录常量
-		self::defines();
+		self::_define();
 
 		// 路由解析
-		self::parseUri();
+		self::_parseUri();
 		
 		// 应用配置
-		self::usrConfig();
+		self::_config();
 		
 		// 网址解析
-		self::parseUrl();
+		self::_parseUrl();
 		
 		// 自动加载类
-		self::autoload();
+		self::_autoload();
     }
 
 	// 初始化
-	public static function instance()
+	public static function _instance()
 	{
         if(!(self::$instance instanceof self)) {
 			self::$instance = new self();
@@ -46,7 +46,7 @@ class App
     }
 	
 	// 运行
-	public function bootstrap(){
+	public function _bootstrap(){
 		
 		$uri = self::$config['URI'];
 		
@@ -97,7 +97,7 @@ class App
 		'MODEL_SUFFIX' => 'Model.class.php'//模型后缀，一般不需要修改
 	);
 	
-	private static function defines(){
+	private static function _define(){
 		
 		define('APP', true);
 		
@@ -151,7 +151,7 @@ class App
 	}
 	
 	
-	private static function parseUri(){
+	private static function _parseUri(){
 		$app = 'index';
 		$controller = 'index';
 		$action = 'index';
@@ -214,7 +214,7 @@ class App
 		self::$config['URI'] = array(NAME_APP=>$app,NAME_CTRL=>$controller,'action'=>$action,'get'=>$_GET);	
 	}
 	
-	private static function parseUrl(){
+	private static function _parseUrl(){
 		$config = self::$config;
 		$appName = $config['URI']['app'];
 		$root = str_replace(basename($_SERVER["SCRIPT_NAME"]),'',$_SERVER["SCRIPT_NAME"]);
@@ -259,7 +259,6 @@ class App
             $errorTrace .= ")<br />\r\n";
         }
 
-		$view = self::view();
 		
 		//错误页面重定向
 		if($url != ''){
@@ -270,8 +269,8 @@ class App
 		$errorTpl = DIR_THEME_APP. self::getConfig('THEME') . DS . 'error.php';
 
 		if (file_exists($errorTpl)) {
-			$view->assign('error',array('code' => $errorCode,'message' => $errorMessage,'trace' => $errorTrace));
-			$view->render('error');
+			$this->assign('error',array('code' => $errorCode,'message' => $errorMessage,'trace' => $errorTrace));
+			$this->render('error');
 		} else {
 			$info = $errorCode && DEBUG ? '<p>'.$errorMessage.'</p><p style="font-size:12px;">'.$errorTrace.'</p> ' : '<p> 很抱歉，您访问的页面不存在或已删除。 </p> ';
 			echo '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"><title>Error</title></head><body><h1>'.$errorCode.' Error</h1>';echo $info;echo '<p><a href="javascript:history.back()" >返回</a></p> </body></html>';
@@ -281,7 +280,7 @@ class App
 	
 	
 	// 应用配置
-	private static function usrConfig()
+	private static function _config()
 	{
 
 		// 当前应用名称
@@ -335,11 +334,11 @@ class App
     }
 	
 	// 自动加载
-	private static function autoload(){
-		spl_autoload_register(array(__CLASS__,'loader'));
+	private static function _autoload(){
+		spl_autoload_register(array(__CLASS__,'_loader'));
 	}
 
-    private static function loader($className)
+    private static function _loader($className)
 	{
 		$className = ucfirst($className);
 		$dirs = array(DIR_LIB,DIR_CTRL,DIR_MODEL);
@@ -391,12 +390,12 @@ class App
 		// 编译模板
         if(!file_exists($compileFile) || (filemtime($compileFile) < filemtime($tplFile))){
 			$path = dirname($compileFile);
-			if(!is_dir($path) && !self::mkDir($path)){
+			if(!is_dir($path) && !self::_mkDir($path)){
 				self::Error('Error:"' . $tplName . '"编译目录创建失败！', 500) ;
 			}
 		
 			$content = file_get_contents($tplFile);
-			$content = self::parse($content);
+			$content = self::_parse($content);
             if(!file_put_contents($compileFile, $content)){
 				self::error('Error:"' . $tplName . '"编译失败！', 500) ;
 			}
@@ -413,29 +412,35 @@ class App
     }
 	
 	// 创建文件夹
-	private static function mkDir($path, $mode = 0777){
+	private static function _mkDir($path, $mode = 0777){
 		return !is_dir($path) && mkdir($path,0777,true) || @chmod($true,0777);
 	}
 	
 	
 	// 获取网址
-	private static function getUrl($name){
+	private static function _getUrl($name){
 		$name = strtoupper($name);
 		$url = self::getConfig('URL');
 		return $url[$name];
 	}
 	
-	private static function addquote($var){
+	private static function _addquote($var){
 		return str_replace("\\\"", "\"", preg_replace("/\[([a-zA-Z0-9_\-\.\x7f-\xff]+)\]/s", "['\\1']", $var));
 	}
 	
+	public static function runtime(){
+		define('ETIME', microtime(true));
+		$runTime = number_format(ETIME - STIME, 4);
+		return $runTime;
+	}
+	
 	// 模板解析器
-	public static function parse($tpl){
+	private static function _parse($tpl){
 		//替换载入模板
 		
 		$tpl = preg_replace("/([\n\r]+)\t+/s","\\1",$tpl);
 		$tpl = preg_replace("/\<\!\-\-\{(.+?)\}\-\-\>/s", "{\\1}",$tpl);
-		$tpl = preg_replace("/\{url\s+(\S+)\}/","<?php echo self::getUrl('\\1');?>",$tpl);
+		$tpl = preg_replace("/\{url\s+(\S+)\}/","<?php echo self::_getUrl('\\1');?>",$tpl);
 		
 		$tpl = preg_replace('/<!--#include\s*file=[\"|\'](.*)[\"|\']-->/iU',"<?php \$this->render('$1'); ?>", $tpl);
 		$tpl = preg_replace("/\{include\s+(.+)\}/","<?php \$this->render('\\1'); ?>",$tpl);		
@@ -452,7 +457,7 @@ class App
 		$tpl = preg_replace("/\{([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*\(([^{}]*)\))\}/","<?php echo \\1;?>",$tpl);
 		$tpl = preg_replace("/\{\\$([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*\(([^{}]*)\))\}/","<?php echo \\1;?>",$tpl); // 函数
 		$tpl = preg_replace("/\{(\\$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)\}/","<?php echo \\1;?>",$tpl); // 变量
-		$tpl = preg_replace("/\{(\\$[a-zA-Z0-9_\[\]\'\"\$\x7f-\xff]+)\}/es", "self::addquote('<?php echo \\1;?>')",$tpl);
+		$tpl = preg_replace("/\{(\\$[a-zA-Z0-9_\[\]\'\"\$\x7f-\xff]+)\}/es", "self::_addquote('<?php echo \\1;?>')",$tpl);
 		$tpl = preg_replace("/\{([A-Z_\x7f-\xff][A-Z0-9_\x7f-\xff]*)\}/s", "<?php echo \\1;?>",$tpl); // 数组对象
 		
 		$tpl = preg_replace ( "/\{(\\$[a-z0-9_]+)\.([a-z0-9_]+)\}/i", "<?php echo $1['$2']; ?>", $tpl);
@@ -465,22 +470,6 @@ class App
 		return $tpl;
 	}
 	
-	// 视图层
-	public static function view(){
-		
-		
-	}
-	
-	// 模型层
-	public static function Model(){
-		
-	}
-	
-	
-	// 工具
-	public static function Helper(){
-		
-	}
 }
 
 // 控制器
@@ -488,10 +477,9 @@ class Controller extends App
 {
     public function __construct()
 	{
-		parent::instance();
 		if(method_exists($this, '_construct')) $this->_construct();
     }
 }
 
 // 运行系统
-App::Instance()->BootStrap(); 
+App::_instance()->_bootStrap(); 

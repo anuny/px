@@ -6,8 +6,11 @@ class CommonController extends Controller
 {
 	public function _construct()
 	{
-		$admin = $this->Model->table('user')->where("User = 'root'")->find();
-		$this->View->assign('admin', $admin);
+		
+		//$admin = $this->Model->table('user')->where("User = 'root'")->find();
+		
+		
+		//$this->View->assign('admin', $admin);
 		
 		$url = $this->config['URL'];
 		$navs = array(
@@ -16,11 +19,12 @@ class CommonController extends Controller
 			array('name'=>'清除缓存','url'=>$url['APP'].'/tool.html')
 		);
 		
-		$this->View->assign('test',$this->test());
-		$this->View->assign('runtime',Helper::runtime());
-		$this->View->assign('title','后台管理');
-		$this->View->assign('logo','PXCMS');
-		$this->View->assign('navs',$navs);
+		$this->assign('test',$this->test());
+		//$this->assign('runtime',Helper::runtime());
+		$this->assign('runtime',123);
+		$this->assign('title','后台管理');
+		$this->assign('logo','PXCMS');
+		$this->assign('navs',$navs);
 	}
 	
 	public function test()

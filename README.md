@@ -1,6 +1,6 @@
-echo "# px" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git remote add origin https://github.com/anuny/px.git
-git push -u origin master
+#代码规范
+
+> MySQL的表名需小写或小写加下划线，如：test, test_orders。
+> 模块名（Model）需用大驼峰命名法，即首字母大写，并在名称后添加Model，如：TestModel。
+> 控制器（Controller）需用大驼峰命名法，即首字母大写，并在名称后添加Controller，如：TestController，IndexController。
+> 方法名（Action）需用小驼峰命名法，即首字母小写，如：index，indexPost。

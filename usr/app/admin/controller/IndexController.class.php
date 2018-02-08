@@ -1,11 +1,11 @@
 <?php defined('APP') or die;
 
-class IndexController extends CommonController
+class Index extends Common
 {
 	
     public function index()
 	{
-		$this->View->render('index');
+		$this->render('index');
     }
 	
 	public function clean_bom()

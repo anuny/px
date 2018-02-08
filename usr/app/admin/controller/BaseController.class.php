@@ -12,7 +12,9 @@ class BaseController extends Controller
 		
 		//$this->View->assign('admin', $admin);
 		
-		$url = $this->config['URL'];
+		
+		
+		$url = self::$config['URL'];
 		$navs = array(
 			array('name'=>'首页','url'=>$url['APP'].'.html'),
 			array('name'=>'清除BOM','url'=>$url['APP'].'/index/clean_bom.html'),

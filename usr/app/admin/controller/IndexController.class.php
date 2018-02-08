@@ -12,8 +12,8 @@ class IndexController extends BaseController
 	{
 		$root = str_replace("\\",'/',substr(DIR_ROOT, 0, strrpos(DIR_ROOT, DIRECTORY_SEPARATOR)));
         $ret = $this->check_bom_dir($root);
-		$this->View->assign('info',$ret);
-		$this->View->render('clean-bom');
+		$this->assign('info',$ret);
+		$this->render('clean-bom');
     }
 	
 	// 扫描文件目录

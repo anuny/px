@@ -170,12 +170,13 @@ class App
 				$scr = str_replace(basename($scr), '', $scr);
 				if ( $uri && @strpos($uri, $scr, 0) !== false ) $uri = substr($uri, strlen($scr));
 			}
-			$uri = parse_url($uri, PHP_URL_PATH);
-			//去除问号后面的查询字符串
-			if ( $uri && false !== ($pos = @strrpos($uri, '?')) ) $uri = substr($uri,0,$pos);
-			//去除后缀
-			if ($uri&&($pos = strrpos($uri,'.html')) > 0) $uri = substr($uri,0,$pos);
 		}
+		$uri = parse_url($uri, PHP_URL_PATH);
+		//去除问号后面的查询字符串
+		if ( $uri && false !== ($pos = @strrpos($uri, '?')) ) $uri = substr($uri,0,$pos);
+		//去除后缀
+		if ($uri&&($pos = strrpos($uri,'.html')) > 0) $uri = substr($uri,0,$pos);
+			
 		// 将路径中的 '//' 或 '../' 等进行清理
 		$uri = str_replace(array('//', '../'), '/', trim($uri, '/'));	
 		
@@ -267,7 +268,6 @@ class App
 		}
 		@header("HTTP/1.1 $errorCode Not Found");
 		$errorTpl = DIR_THEME_APP. self::getConfig('THEME') . DS . 'error.php';
-
 		if (file_exists($errorTpl)) {
 			$this->assign('error',array('code' => $errorCode,'message' => $errorMessage,'trace' => $errorTrace));
 			$this->render('error');
@@ -479,6 +479,10 @@ class Controller extends App
 	{
 		if(method_exists($this, '_construct')) $this->_construct();
     }
+	public static function redirect($url){
+		header("Location: $url",false, 301);
+		exit;
+	}
 }
 
 // 运行系统

@@ -73,7 +73,8 @@ class App
 		call_user_func(array($controller,$action));
 	}
 	
-	public static $config=array(	
+	// 默认配置
+	public static $config = array(	
 		'DEBUG' => true,// 开启调试模式
 		'URL_REWRITE' => true,// 开启伪静态重写
 		'USE_SESSION' => true,// 开启SESSION会话
@@ -266,31 +267,14 @@ class App
 			exit('<script language="javascript">if(self!=top){parent.location.href="'.$url.'";} else {window.location.href="'.$url.'";}</script>');
 		}
 		@header("HTTP/1.1 $errorCode Not Found");
-
 		$errorTpl = DIR_THEME_APP. self::getConfig('THEME') . DS . 'error.php';
-		
-		
-		 
-		
+
 		if (file_exists($errorTpl)) {
 			$view->assign('error',array('code' => $errorCode,'message' => $errorMessage,'trace' => $errorTrace));
 			$view->render('error');
 		} else {
 			$info = $errorCode && DEBUG ? '<p>'.$errorMessage.'</p><p style="font-size:12px;">'.$errorTrace.'</p> ' : '<p> 很抱歉，您访问的页面不存在或已删除。 </p> ';
-			echo '
-			<!doctype html>
-			<html>
-			<head>
-			<meta charset="utf-8">
-			<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-			<title>Error</title>
-			</head>
-			<body>
-			<h1>'.$errorCode.' Error</h1>';
-			echo $info;
-			echo '<p><a href="javascript:history.back()" >返回</a></p> 
-			</body>
-			</html>';
+			echo '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"><title>Error</title></head><body><h1>'.$errorCode.' Error</h1>';echo $info;echo '<p><a href="javascript:history.back()" >返回</a></p> </body></html>';
 		}
 		exit;	
 	}

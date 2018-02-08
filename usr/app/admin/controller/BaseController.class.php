@@ -2,7 +2,7 @@
 /* 
 	公共类
 */
-class CommonController extends Controller
+class BaseController extends Controller
 {
 	public function _construct()
 	{

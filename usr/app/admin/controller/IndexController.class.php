@@ -1,6 +1,6 @@
 <?php defined('APP') or die;
 
-class Index extends Common
+class IndexController extends BaseController
 {
 	
     public function index()

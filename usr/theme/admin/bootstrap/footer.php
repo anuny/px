@@ -1,4 +1,4 @@
-<?php defined('APP') or die; ?>
+<?php defined('PX') or die; ?>
   <footer class="footer">
     <div class="container">
       <p class="text-muted">Done in :<span class="user badge">{$runtime} second(s)</span> &nbsp;&nbsp; {$date("Y-m-d G:i T",time())}</p>

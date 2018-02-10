@@ -15,6 +15,9 @@ define('URL_DEPR', '/');
 //参数分隔符
 define('URL_PARAM_DEPR', '-');
 
+define('DEPR_CTRL', 'Controller');
+define('DEPR_MODEL', 'Model');
+
 // 目录名称
 $name_maps = array(
     'SYS' => 'sys', // 框架
@@ -53,5 +56,7 @@ define('DIR_UPLOAD', DIR_USR . NAME_UPLOAD .DS);
 define('DIR_CACHE', DIR_DATA . NAME_CACHE .DS);
 define('DIR_COMPILED', DIR_DATA . NAME_COMPILED .DS);
 define('DIR_LOG', DIR_DATA . NAME_LOG .DS);
+
+
 
 require_once 'px/app.php';

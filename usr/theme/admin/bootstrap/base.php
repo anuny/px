@@ -1,4 +1,4 @@
-<?php defined('APP') or die; ?>
+<?php defined('PX') or die; ?>
 <!DOCTYPE html>
 <head>
     <meta charset="utf-8" />

@@ -1,4 +1,4 @@
-<?php defined('APP') or die; ?>
+<?php defined('PX') or die; ?>
 <!DOCTYPE html>
 <html>
 <head>

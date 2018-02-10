@@ -1,4 +1,4 @@
-<?php defined('APP') or die; ?>
+<?php defined('PX') or die; ?>
 {include base} 
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container">
@@ -13,8 +13,8 @@
 	</div>
 	<div id="navbar" class="collapse navbar-collapse">
 	  <ul class="nav navbar-nav">
-	    {foreach $navs $key $nav}
-		<li><a href="{$nav['url']}">{$nav['name']}</a></li>
+	    {foreach $nav $key $val}
+		<li><a href="{$val['url']}">{$val['name']}</a></li>
 		{/foreach}
 	  </ul>
 	</div> 

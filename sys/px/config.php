@@ -8,7 +8,7 @@ abstract class config {
 		'URL_REWRITE' => true,// 开启伪静态重写
 		'USE_SESSION' => true,// 开启SESSION会话
 		'DOMAIN' => '',// 设置域名	
-		'THEME' => 'default',// 默认主题
+		'THEME' => 'bootstrap',// 默认主题
 		'CACHE_TPL' => true,//是否开启模板缓存	
 		'CACHE_DATA'=>true,//是否开启数据缓存	
 		'CHARSET' => 'UTF-8',// 设置编码

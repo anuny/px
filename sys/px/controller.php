@@ -3,29 +3,24 @@ namespace sys\px;
 
 // 控制层
 abstract class controller{
-	private $data   = array();
-	private $model;
+	private static $models = array();
+	public $data   = array();
+	public $db;
+	public $view;
 	
     public function __construct() {
-		$this->model = new model();
+		$this->db = new model();
+		$this->view = new view();
     }
-    public function render($data = null){
-        echo 'controller->render';
-    }
-	public function assign($k, $v) 
-	{
-        $this->data[$k] = $v;
-    }
-	
-	public function model($name='') 
-	{
-        if(isset($name) && $name!=''){
+
+	public function model($className='') 
+	{	
+		if(!isset(self::$models[$className])) {
 			$uri = config::get('URI');
-			$modelName = $name.'Model';
+			$modelName = $className.DEPR_MODEL;
 			$class = '\\'.NAME_USR.'\\'.NAME_APP.'\\'.$uri['app'].'\\'.NAME_MODEL.'\\'.$modelName;
-			return new $class();
-		}else{
-			return $this->model;
+			self::$models[$className] =  new $class();
 		}
+		return  self::$models[$className];
     }
 }

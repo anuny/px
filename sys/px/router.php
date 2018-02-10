@@ -3,6 +3,7 @@ namespace sys\px;
 
 // 路由类
 abstract class router extends app{
+	private static $uri = array();
 	
 	// 路由分发
     public static function dispatch()
@@ -10,6 +11,10 @@ abstract class router extends app{
 		// 保存路由配置
 		$uri = self::parseUri();
 		config::set('URI',$uri);
+		
+		
+		$url = self::parseUrl();
+		config::set('URL',$url);
 
 		// 检测模块
 		$appPath = DIR_APP.$uri['app'];
@@ -36,6 +41,21 @@ abstract class router extends app{
 		// 函数调用
 		call_user_func(array($controller,$action));
     }
+	
+	private static function parseUrl(){
+		$uri = self::$uri;
+		$appName = $uri['app'];
+		$root       = str_replace(basename($_SERVER["SCRIPT_NAME"]),'',$_SERVER["SCRIPT_NAME"]);
+		$app        = config::get('URL_REWRITE')? $appName : 'index.php/' . $appName;// APP路径
+		$url_root   = substr($root, 0, -1);// 根路径
+		$url_app    = $url_root.'/'.$app;// APP路径
+		$url_usr    = $url_root.'/'.NAME_USR;// USR路径
+		$url_static = $url_usr.'/'.NAME_STATIC;// 静态文件夹路径
+		$url_theme  = $url_usr.'/'.NAME_THEME.'/'.$appName.'/'.config::get('THEME');// 主题静态文件夹
+		$url_upload = $url_usr.'/'.NAME_UPLOAD;// 上传文件路径
+		$url = array('ROOT'=>$url_root,'APP'=>$url_app,'THEME'=>$url_theme,'UPLOAD'=>$url_upload,'STATIC'=>$url_static);
+		return $url;
+	}
 	
 	// 路由解析
 	private static function parseUri(){
@@ -99,7 +119,9 @@ abstract class router extends app{
 				}
 			}
 		}
-		return array(NAME_APP=>$app,NAME_CTRL=>$controller,'action'=>$action,'req'=>$_GET);	
+		$ret = array(NAME_APP=>$app,NAME_CTRL=>$controller,'action'=>$action,'req'=>$_GET);	
+		self::$uri = $ret;
+		return $ret;
 	}
 	
 	

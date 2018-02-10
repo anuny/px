@@ -1,4 +1,4 @@
-<?php defined('APP') or die; ?>
+<?php defined('PX') or die; ?>
 {include header} 
 <body style="padding-top:70px">
   <div class="container">

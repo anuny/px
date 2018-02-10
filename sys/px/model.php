@@ -9,5 +9,9 @@ class model {
 	{
 		$this->db = 'model';
     }
+	public function table($name='')
+	{
+		return 'model->table->'.$name;
+    }
 
 }

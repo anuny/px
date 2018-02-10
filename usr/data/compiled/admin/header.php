@@ -1,4 +1,4 @@
-<?php defined('APP') or die; ?>
+<?php use sys\px\helper;?><?php defined('PX') or die; ?>
 <?php $this->render('base'); ?> 
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container">
@@ -13,8 +13,8 @@
 </div>
 <div id="navbar" class="collapse navbar-collapse">
   <ul class="nav navbar-nav">
-    <?php if(is_array($navs)) foreach($navs AS $key => $nav){?>
-<li><a href="<?php echo $nav['url'];?>"><?php echo $nav['name'];?></a></li>
+    <?php if(is_array($nav)) foreach($nav AS $key => $val){?>
+<li><a href="<?php echo $val['url'];?>"><?php echo $val['name'];?></a></li>
 <?php }?>
   </ul>
 </div> 

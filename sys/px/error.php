@@ -3,14 +3,16 @@ namespace sys\px;
 use Exception;
 
 // 错误类
-class error extends Exception {
+class error extends Exception 
+{
 	private $errorMessage = '';
     private $errorFile = '';
     private $errorLine = 0;
     private $errorCode = '';
  	private $trace = '';
 	
-    public function __construct($errorMessage, $errorCode = 0, $url='') {
+    public function __construct($errorMessage, $errorCode = 0, $url='') 
+	{
 		parent::__construct($errorMessage, $errorCode);
         $this->errorMessage = $errorMessage;
 		$this->errorCode = $errorCode == 0?$this->getCode() : $errorCode;
@@ -21,7 +23,8 @@ class error extends Exception {
     }
 	
 	//获取trace信息
-	protected function trace() {
+	protected function trace() 
+	{
         $trace = $this->getTrace();
         $traceInfo='';
         foreach($trace as $t) {
@@ -33,19 +36,18 @@ class error extends Exception {
     }
 
 	//输出错误信息
-     protected function showError($url){
+     protected function showError($url)
+	 {
 		 
 		$view = new View();
 		 
 		//错误页面重定向
-		if($error_url != ''){
-			exit('<script language="javascript">if(self!=top){parent.location.href="'.$error_url.'";} else {window.location.href="'.$error_url.'";}</script>');
+		if($url != ''){
+			exit('<script language="javascript">if(self!=top){parent.location.href="'.$url.'";} else {window.location.href="'.$url.'";}</script>');
 		}
 		@header("HTTP/1.1 $this->errorCode Not Found");
-
-		$theme =  Config::get('THEME');
 		
-		$errorTpl = DIR_THEME . $theme.DS.'error.php';
+		$errorTpl = DIR_THEME_APP.'error.php';
 		
 		
 		if (file_exists($errorTpl)) {

@@ -2,21 +2,10 @@
 namespace sys\px;
 
 // 视图层
-class view {
-	private $config = array();
+class view 
+{
     private $data   = array();
-    private $tplDir = '';
-	private $compiledDir = '';
-	
 
-    public function __construct()
-	{
-		$app = config::get('URI')['app'];
-		$theme = config::get('THEME');
-        $this->tplDir = DIR_THEME.$app.DS.$theme.DS;
-		$this->compiledDir = DIR_COMPILED.$app.DS;
-    }
-	
     /**
      * 设置模板变量
      */
@@ -30,36 +19,40 @@ class view {
      */
     public function render($tplName) 
 	{
-		$tplName = trim($tplName);
 		
+		$tplName = trim($tplName);
 
 		// 没有模板名
 		if(!isset($tplName) || $tplName==''){
-			$tplName = config::get('URI')['controller']. '.' . config::get('URI')['action'];
+			$tplName = URI_CTRL. '.' . URI_ACTION;
 		};
 	
 		// 模板文件名
-		$tplFile  = $this->tplDir . $tplName. '.php';
+		$tplFile  = DIR_THEME_APP . $tplName. '.php';
 	
 		// 判断模板文件是否存在
 		if(!file_exists($tplFile)){
-			new error('Error: 模板 '.$tplFile.' 不存在！', 500) ;	
+			new error('Theme Error: template '.$tplFile.' does not exist！', 500) ;	
 		}
 		
 		// 编译文件名
-		$compileFile  = $this->compiledDir . $tplName. '.php';
+		$compileFile  = DIR_COMPILED_APP . $tplName. '.php';
 		
 		// 编译模板
         if(!file_exists($compileFile) || (filemtime($compileFile) < filemtime($tplFile))){
 			$path = dirname($compileFile);
+			
+			// 创建编译目录失败
 			if(!is_dir($path) && !Helper::mk_dir($path)){
-				new Error('ERROR:"' . $tplName . '"编译目录创建失败！', 500) ;
+				new Error('Template Error: Compiled floder"' . $path . '"can not creat!', 500) ;
 			}
 		
 			$content = file_get_contents($tplFile);
 			$content = $this->parse($content);
+			
+			// 编译失败
             if(!file_put_contents($compileFile, $content)){
-				new error('ERROR:"' . $tplName . '"编译失败！', 500) ;
+				new error('Template Error:"' .URI_APP.'->'. $tplName . '"compilation fails!', 500) ;
 			}
         }
 		
@@ -72,12 +65,6 @@ class view {
 		unset($tplName);
 	}
 	
-	protected function getUrl($name){
-		$url = config::get('URL');
-		$name = strtoupper($name);
-		return $url[$name];
-	}
-
 
 	/**
      * 解析模板
@@ -89,13 +76,7 @@ class view {
 		
 		$tpl = preg_replace("/([\n\r]+)\t+/s","\\1",$tpl);
 		$tpl = preg_replace("/\<\!\-\-\{(.+?)\}\-\-\>/s", "{\\1}",$tpl);
-		
-		$tpl = preg_replace("/\{url\s+(\S+)\}/", "<?php echo \$this->getUrl('$1'); ?>",$tpl);
-		
-		
-		
-		
-		
+
 		$tpl = preg_replace('/<!--#include\s*file=[\"|\'](.*)[\"|\']-->/iU',"<?php \$this->render('$1'); ?>", $tpl);
 		$tpl = preg_replace("/\{include\s+(.+)\}/","<?php \$this->render('\\1'); ?>",$tpl);		
 		
@@ -121,7 +102,6 @@ class view {
 		
 		$tpl = preg_replace ( "/\{(\\$[a-z0-9_]+)\::([a-z0-9_]+)\}/i", "<?php $1::$2; ?>", $tpl);
 		$tpl = preg_replace ( "/\{(\\$[a-z0-9_]+)\::([a-z0-9_]+)\.([a-z0-9_]+)\}/i", "<?php echo $1::\'$2\'][\'$3\']; ?>", $tpl);
-		$tpl = '<?php use sys\px\helper;?>'.$tpl;
 	
 		return $tpl;
 	}

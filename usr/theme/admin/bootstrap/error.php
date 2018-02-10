@@ -22,8 +22,13 @@ a:hover {text-decoration: underline;}
 <div class="ip-attack">
   <dl>
     <h1>{$error['code']} Error</h1>
+	{if DEBUG}
     <dt style="font-size:18px">{$error['message']}</dt>
 	<dt style="font-size:12px;padding:10px 0">{$error['trace']}</dt>
+	{else}
+	<dt style="font-size:18px">页面丢失或发生错误！</dt>
+	<dt style="font-size:12px;padding:10px 0"></dt>
+	{/if}
     <dt><a href="javascript:history.back()" >返回</a></dt>
   </dl>
 </div>

@@ -2,9 +2,10 @@
 namespace sys\px;
 
 // 路由类
-abstract class uri extends app{
-	private static $uri;
-	private static function getUrl(){
+abstract class uri
+{
+	private static function getUrl()
+	{
 		// 支持 PATH_INFO 模式
 		if(isset($_SERVER['PATH_INFO'])){
 			$uri = $_SERVER['PATH_INFO'];
@@ -24,23 +25,24 @@ abstract class uri extends app{
 		//去除问号后面的查询字符串
 		if ( $uri && false !== ($pos = @strrpos($uri, '?')) ) $uri = substr($uri,0,$pos);
 		//去除后缀
-		if ($uri&&($pos = strrpos($uri,'.html')) > 0) $uri = substr($uri,0,$pos);
+		if ($uri&&($pos = strrpos($uri,URL_HTML_SUFFIX)) > 0) $uri = substr($uri,0,$pos);
 			
 		// 将路径中的 '//' 或 '../' 等进行清理
-		self::$uri = str_replace(array('//', '../'), '/', trim($uri, '/'));
+		return str_replace(array('//', '../'), '/', trim($uri, '/'));
 	}
 		
 	// 路由解析
-	public static function parse(){
+	public static function parse()
+	{
 		$app = 'index';
 		$controller = 'index';
 		$action = 'index';
 		
-		$uri = self::$uri;
+		$uri = self::getUrl();
 
 		if ($uri) {
 			// 使用“/”分割字符串，并保存在数组中
-			$urlArray = explode('/', $uri);
+			$urlArray = explode( URL_DEPR , $uri);
 			// 删除空的数组元素
 			$urlArray = array_filter($urlArray);
 			
@@ -58,7 +60,7 @@ abstract class uri extends app{
 			// 获取URL参数
 			array_shift($urlArray);
 			$param = $urlArray ? $urlArray[0] : '';
-			$param = explode('-', $param);
+			$param = explode( URL_PARAM_DEPR , $param);
 			$param_count = count($param);
 			for($i=0; $i<$param_count; $i=$i+2) {			
 				$_GET[$i] = $param[$i];
@@ -70,6 +72,8 @@ abstract class uri extends app{
 				}
 			}
 		}
-		config::set('URI',array(NAME_APP=>$app,NAME_CTRL=>$controller,'action'=>$action,'req'=>$_GET));
+		define('URI_APP',$app);
+		define('URI_CTRL',$controller);
+		define('URI_ACTION',$action);
 	}	
 }

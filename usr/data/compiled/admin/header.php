@@ -1,4 +1,4 @@
-<?php use sys\px\helper;?><?php defined('PX') or die; ?>
+<?php defined('PX') or die; ?>
 <?php $this->render('base'); ?> 
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container">

@@ -1,4 +1,4 @@
-<?php use sys\px\helper;?><?php defined('PX') or die; ?>
+<?php defined('PX') or die; ?>
 <?php $this->render('header'); ?> 
 <body style="padding-top:70px">
   <div class="container">

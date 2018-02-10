@@ -1,6 +1,7 @@
 <?php
 namespace usr\app\admin\controller;
 use sys\px\controller;
+use sys\px\helper;
 
 class baseController extends Controller
 {
@@ -11,5 +12,6 @@ class baseController extends Controller
 		$this->view->assign('nav',$nav);
 		$this->view->assign('title','后台管理');
 		$this->view->assign('logo','PXCMS');
+		$this->view->assign('runtime',helper::runtime());
 	}
 }

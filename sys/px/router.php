@@ -2,38 +2,33 @@
 namespace sys\px;
 
 // 路由类
-abstract class router extends app{
-	private static $uri = array();
-	
+abstract class router
+{
 	// 路由分发
     public static function dispatch()
 	{
-		// 保存路由配置
-		$uri = config::get('URI');
-
 		// 检测模块
-		$appPath = DIR_APP.$uri['app'];
+		$appPath = DIR_APP.URI_APP;
 		if(!file_exists($appPath)) {
-			new error('Application:"'.$uri['app'].'"does not exist',500) ;
+			new error('Application Error:Project "'.URI_APP.'"does not exist!',500) ;
 		}
 		
 		// 检测控制器类
-		$controllerName = "$uri[controller]Controller";
-		$class = '\\'.NAME_USR.'\\'.NAME_APP.'\\'.$uri['app'].'\\'.NAME_CTRL.'\\'.$controllerName;
+		$controllerName = URI_CTRL . DEPR_CTRL;
+		$class = SPACE_USR_CTRL.DS.$controllerName;
 		if(!class_exists($class)){
-			new error('Controller: "'.$controllerName.'"  does not exist',500) ; 
+			new error('Controller Error: '.URI_APP.'"->'.$controllerName.'"  does not exist',500) ; 
 		}
 		
 		// 实例化类
 		$controller = new $class();
 		
 		// 检测方法
-		$action = $uri['action'];
-        if(!method_exists($controller, $action)){
-			new error('Action: "'.$action.' "does not exist',500) ;
+        if(!method_exists($controller, URI_ACTION)){
+			new error('Action Error: '.URI_APP.'"->'.$controller.'->'.URI_ACTION.' "does not exist',500) ;
 		}
 		
 		// 函数调用
-		call_user_func(array($controller,$action));
+		call_user_func(array($controller,URI_ACTION));
     }
 }

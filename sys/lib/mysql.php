@@ -1,7 +1,8 @@
 <?php
-namespace sys\ext;
+namespace sys\lib;
 
-class mysql {
+class mysql 
+{
 
     public function __construct()
 	{

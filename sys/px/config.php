@@ -2,7 +2,8 @@
 namespace sys\px;
 
 // 配置类
-abstract class config {
+class config 
+{
     static public $config=array(	
 		'DEBUG' => true,// 开启调试模式
 		'URL_REWRITE' => true,// 开启伪静态重写

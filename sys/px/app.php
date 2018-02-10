@@ -10,12 +10,13 @@
 namespace sys\px;
 
 class app {
-	
+	 
 	// 单例
 	private static $instance; 
 	
 	// 构造
-    private function __construct(){
+    private function __construct()
+	{
 		// 自动加载类
 		spl_autoload_register('self::loader');
     }
@@ -29,13 +30,14 @@ class app {
     }
 	
 	// 实例化
-	public static function bootStrap(){
+	public static function bootStrap()
+	{
 		
 		// 网址解析
 		uri::parse();
-		
-		// 路径配置
-		path::config();
+
+		// 初始配置
+		setting::init();
 		
 		// 路由分发
 		router::dispatch();
@@ -48,7 +50,7 @@ class app {
 		if ( is_file($classPath) ) {
 			require_once $classPath; 
 		}else{
-			//new error('Loader:"'.$classPath.'"does not exist',500) ;
+			new error('Loader Error: Class files"'.$classPath.'"does not exist!',500) ;
 		}
     }
 	

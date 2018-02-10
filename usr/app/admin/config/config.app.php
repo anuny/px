@@ -1,4 +1,4 @@
-<?php defined('APP') or die;
+<?php defined('PX') or die;
 
 //是否开启调试模式
 $config['DEBUG']= true;	

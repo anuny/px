@@ -38,4 +38,10 @@ class config
 	{
 		return (isset($value) && !empty($value)) ? self::$config[$key] = $value : self::$config = $key;
 	}
+	
+	//保存
+	static public function write( $path , $value=array()) 
+	{
+		return (isset($value) && !empty($value)) ? self::$config[$key] = $value : self::$config = $key;
+	}
 }

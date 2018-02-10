@@ -21,6 +21,9 @@ define('DEPR_MODEL', 'Model');
 // 目录名称
 $name_maps = array(
     'SYS' => 'sys', // 框架
+	'SYS_PX' => 'px', // 框架
+	'SYS_EXT' => 'ext', // 框架
+	'SYS_LIB' => 'lib', // 框架
 	'USR' => 'usr', // 用户
 	'APP' => 'app', // 应用
 	'CONFIG' => 'config', // 配置
@@ -57,6 +60,8 @@ define('DIR_CACHE', DIR_DATA . NAME_CACHE .DS);
 define('DIR_COMPILED', DIR_DATA . NAME_COMPILED .DS);
 define('DIR_LOG', DIR_DATA . NAME_LOG .DS);
 
-
+define('SPACE_SYS_PX',NAME_SYS.DS.NAME_SYS_PX);
+define('SPACE_SYS_LIB',NAME_SYS.DS.NAME_SYS_LIB);
+define('SPACE_SYS_EXT',NAME_SYS.DS.NAME_SYS_EXT);
 
 require_once 'px/app.php';

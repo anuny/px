@@ -17,10 +17,10 @@ abstract class controller{
 	{	
 		if(!isset(self::$models[$className])) {
 			$uri = config::get('URI');
-			$modelName = $className.DEPR_MODEL;
-			$class = '\\'.NAME_USR.'\\'.NAME_APP.'\\'.$uri['app'].'\\'.NAME_MODEL.'\\'.$modelName;
+			$class = '\\'.NAME_USR.'\\'.NAME_APP.'\\'.$uri['app'].'\\'.NAME_MODEL.'\\'.$className.DEPR_MODEL;
 			self::$models[$className] =  new $class();
 		}
 		return  self::$models[$className];
     }
 }
+

@@ -31,6 +31,12 @@ class app {
 	// 实例化
 	public static function bootStrap(){
 		
+		// 网址解析
+		uri::parse();
+		
+		// 路径配置
+		path::config();
+		
 		// 路由分发
 		router::dispatch();
 	}

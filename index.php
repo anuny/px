@@ -13,4 +13,4 @@ define('PX', true);
 require('sys/boot.php');
 
 // 运行系统
-sys\px\app::init()->bootStrap();  
+sys\px\app::init()->bootStrap();

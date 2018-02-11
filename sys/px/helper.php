@@ -2,42 +2,42 @@
 namespace sys\px;
 
 // 配置类
-abstract class helper 
+abstract class helper
 {
-
-	// 创建多级文件
-	public static function mk_dir($path, $mode = 0777)
+	/**
+	 * 创建多级文件
+	 * @param  string   $path 要创建的路径
+	 * @param  integer  $mode 权限
+	 * @return boolean        状态
+	 */
+	public static function mk_dir($path='', $mode = 0777)
 	{
 		return !is_dir($path) && mkdir($path,0777,true) || @chmod($true,0777);
 	}
-	
-	//遍历删除目录和目录下所有文件
-	static function del_dir($dir)
+
+	/**
+	 * 遍历删除目录和目录下所有文件
+	 * @param  string $path 要删除路径
+	 * @return boolean  状态
+	 */
+	static function del_dir($path='')
 	{
-		if (!is_dir($dir)){
+		if (!is_dir($path)){
 			return false;
 		}
-		$handle = opendir($dir);
+		$handle = opendir($path);
 		while (($file = readdir($handle)) !== false){
 			if ($file != "." && $file != ".."){
-				is_dir("$dir/$file")?	self::del_dir("$dir/$file"):@unlink("$dir/$file");
+				is_dir("$path/$file")?	self::del_dir("$path/$file"):@unlink("$path/$file");
 			}
 		}
 		if (readdir($handle) == false){
 			closedir($handle);
-			@rmdir($dir);
+			@rmdir($path);
 		}
 	}
 
-	
-	// 获取网址
-	public static function getUrl($name)
-	{
-		$name = strtoupper($name);
-		$url = config::get('URL');
-		return $url[$name];
-	}
-	
+
 	/**
 	 * 程序执行时间
 	 * @return time
@@ -48,7 +48,7 @@ abstract class helper
 		$runTime = number_format(ETIME - STIME, 4);
 		return $runTime;
 	}
-	
+
 	/**
 	 * 重定向至指定url
 	 * @param string $url 要跳转的url
@@ -59,6 +59,6 @@ abstract class helper
 		header("Location: $url",false, 301);
 		exit;
 	}
-	
-	
+
+
 }

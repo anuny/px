@@ -8,16 +8,20 @@ abstract class controller
 	public $data   = array();
 	public $db;
 	public $view;
-	
-    public function __construct() 
+
+    public function __construct()
 	{
 		$this->db = new model();
 		$this->view = new view();
     }
-	
-	// 获取应用模型
-	public function model($className='') 
-	{	
+
+	/**
+	 * [获取应用模型]
+	 * @param  string $className [模型名称]
+	 * @return [object]          [模型对象]
+	 */
+	public function model($className='')
+	{
 		if(!isset(self::$models[$className])) {
 			$class = SPACE_USR_MODEL.DS.$className.DEPR_MODEL;
 			self::$models[$className] =  new $class();
@@ -25,4 +29,3 @@ abstract class controller
 		return  self::$models[$className];
     }
 }
-

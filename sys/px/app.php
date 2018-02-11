@@ -3,17 +3,19 @@
 /**
  * PX Content Management System
  * http://pxcms.yangfei.name
- * @copyright Copyright (c) 2018 Anuny 
+ * @copyright Copyright (c) 2018 Anuny
+ * @license pxcms is opensource software licensed under the MIT license.
  * @license pxcms is opensource software licensed under the MIT license.
  */
- 
+
+
 namespace sys\px;
 
 class app {
-	 
+
 	// 单例
-	private static $instance; 
-	
+	private static $instance;
+
 	// 构造
     private function __construct()
 	{
@@ -28,30 +30,29 @@ class app {
 		}
         return self::$instance;
     }
-	
+
 	// 实例化
 	public static function bootStrap()
 	{
-		
 		// 网址解析
 		uri::parse();
 
 		// 初始配置
 		setting::init();
-		
+
 		// 路由分发
 		router::dispatch();
 	}
-	
+
 	// 加载器
 	private static function loader($className)
 	{
 		$classPath = DIR_ROOT . $className . '.php';
 		if ( is_file($classPath) ) {
-			require_once $classPath; 
+			require_once $classPath;
 		}else{
 			new error('Loader Error: Class files"'.$classPath.'"does not exist!',500) ;
 		}
     }
-	
+
 }

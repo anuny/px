@@ -1,5 +1,5 @@
 <?php
-namespace usr\app\admin\controller;
+namespace usr\app\index\controller;
 use sys\controller;
 use sys\helper;
 

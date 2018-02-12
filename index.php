@@ -4,13 +4,14 @@
  * PX Content Management System
  * http://pxcms.yangfei.name
  * @copyright  Copyright (c) 2017 Anuny
- * @license    pxcms is opensource software licensed under the MIT license.
+ * @license opensource software licensed under the MIT license.
  */
-
+ 
+// 入口标识
 define('PX', true);
 
 // 载入框架
-require('sys/boot.php');
+require('sys/app.php');
 
 // 运行系统
-sys\px\app::init()->bootStrap();
+sys\app::init()->bootStrap();

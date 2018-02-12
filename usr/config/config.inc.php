@@ -45,7 +45,7 @@ $config['DB_PWD']='root';
 $config['DB_PORT']=3306; 
 
 //数据库名
-$config['DB_NAME']='mysql'; 
+$config['DB_NAME']='0851'; 
 
 //数据库前缀
 $config['DB_PREFIX']=''; 

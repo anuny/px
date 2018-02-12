@@ -1,5 +1,5 @@
 <?php
-namespace usr\app\admin\controller;
+namespace usr\app\index\controller;
 use sys\helper AS helper;
 
 class toolController extends baseController
@@ -8,7 +8,7 @@ class toolController extends baseController
     public function index()
 	{
 		helper::del_dir(DIR_DATA);
-        helper::redirect('index.html');
+        helper::redirect('./');
     }
 	
 	public function clean_bom()

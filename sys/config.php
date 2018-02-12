@@ -1,5 +1,5 @@
 <?php
-namespace sys\px;
+namespace sys;
 
 // 配置类
 class config 
@@ -9,7 +9,7 @@ class config
 		'URL_REWRITE' => true,// 开启伪静态重写
 		'USE_SESSION' => true,// 开启SESSION会话
 		'DOMAIN' => '',// 设置域名	
-		'THEME' => 'bootstrap',// 默认主题
+		'THEME' => 'default',// 默认主题
 		'CACHE_TPL' => true,//是否开启模板缓存	
 		'CACHE_DATA'=>true,//是否开启数据缓存	
 		'CHARSET' => 'UTF-8',// 设置编码
@@ -20,11 +20,7 @@ class config
 		'DB_PORT' => 3306, // 数据库端口
 		'DB_NAME' => '', // 数据库名
 		'DB_PREFIX' => '', // 数据库前缀
-		'DB_CHARSET' => 'utf8', // 数据库编码
-		'CTRL_SUFFIX' => 'Controller.class.php',//控制器后缀
-		'CTRL_DEFAULT' => 'index',//默认模块
-		'ACTION_DEFAULT' => 'index',//默认操作
-		'MODEL_SUFFIX' => 'Model.class.php'//模型后缀，一般不需要修改
+		'DB_CHARSET' => 'utf8' // 数据库编码
 	);
 		
 	//获取

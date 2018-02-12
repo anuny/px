@@ -8,8 +8,8 @@
  * @license pxcms is opensource software licensed under the MIT license.
  */
 
-
-namespace sys\px;
+namespace sys;
+require_once 'defined.php';
 
 class app {
 
@@ -54,5 +54,8 @@ class app {
 			new error('Loader Error: Class files"'.$classPath.'"does not exist!',500) ;
 		}
     }
+	
+	//防止克隆
+	public function __clone() {} 
 
 }

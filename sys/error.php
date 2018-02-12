@@ -1,5 +1,5 @@
 <?php
-namespace sys\px;
+namespace sys;
 use Exception;
 
 // 错误类

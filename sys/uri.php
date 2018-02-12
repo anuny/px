@@ -1,7 +1,7 @@
 <?php
-namespace sys\px;
+namespace sys;
 
-// 路由类
+// 网址解析类
 abstract class uri
 {
 	private static function getUrl()
@@ -34,9 +34,9 @@ abstract class uri
 	// 路由解析
 	public static function parse()
 	{
-		$app = 'index';
-		$controller = 'index';
-		$action = 'index';
+		$app = DEFAULT_APP;
+		$controller = DEFAULT_CTRL;
+		$action = DEFAULT_ACTION;
 		
 		$uri = self::getUrl();
 
@@ -48,6 +48,12 @@ abstract class uri
 			
 			// 获取应用名
 			if($urlArray && $urlArray[0]) $app = $urlArray[0];
+
+			// 如果开启映射，应用目录不存在，尝试当做默认应用处理
+			if(DEFAULT_MAP && !file_exists(DIR_APP.$app)) {
+				$app = DEFAULT_APP;
+				array_unshift($urlArray, DEFAULT_APP);
+			}
 
 			// 获取控制器名
 			array_shift($urlArray);

@@ -1,5 +1,5 @@
 <?php
-namespace sys\px;
+namespace sys;
 
 // 视图层
 class view 
@@ -28,7 +28,7 @@ class view
 		};
 	
 		// 模板文件名
-		$tplFile  = DIR_THEME_APP . $tplName. '.php';
+		$tplFile  = DIR_THEME_APP . $tplName. TPL_SUFFIX;
 	
 		// 判断模板文件是否存在
 		if(!file_exists($tplFile)){
@@ -103,6 +103,7 @@ class view
 		$tpl = preg_replace ( "/\{(\\$[a-z0-9_]+)\::([a-z0-9_]+)\}/i", "<?php $1::$2; ?>", $tpl);
 		$tpl = preg_replace ( "/\{(\\$[a-z0-9_]+)\::([a-z0-9_]+)\.([a-z0-9_]+)\}/i", "<?php echo $1::\'$2\'][\'$3\']; ?>", $tpl);
 	
+		//return new minify(array('html'=>$tpl));
 		return $tpl;
 	}
 	

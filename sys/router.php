@@ -1,5 +1,5 @@
 <?php
-namespace sys\px;
+namespace sys;
 
 // 路由类
 abstract class router
@@ -15,7 +15,7 @@ abstract class router
 		
 		// 检测控制器类
 		$controllerName = URI_CTRL . DEPR_CTRL;
-		$class = SPACE_USR_CTRL.DS.$controllerName;
+		$class = SPACE_CTRL.DS.$controllerName;
 		if(!class_exists($class)){
 			new error('Controller Error: '.URI_APP.'"->'.$controllerName.'"  does not exist',500) ; 
 		}
@@ -25,7 +25,7 @@ abstract class router
 		
 		// 检测方法
         if(!method_exists($controller, URI_ACTION)){
-			new error('Action Error: '.URI_APP.'"->'.$controller.'->'.URI_ACTION.' "does not exist',500) ;
+			new error('Action Error: '.URI_APP.'"->'.$controllerName.'->'.URI_ACTION.' "does not exist',500) ;
 		}
 		
 		// 函数调用

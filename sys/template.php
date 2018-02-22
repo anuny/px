@@ -11,13 +11,13 @@ class template
     protected $html = '';
 	
 	$this->css = $array['css']||true;
-		$this->js = $array['js']||false;
-		$this->comment = $array['comment']||false;
-		$this->comments = $array['comments']||true;
-		$this->html = $this->minifyHTML($array['html']);
-		if ($this->comment) {
-			$this->html.= "\n" . $this->bottomComment($array['html'], $this->html);
-		}
+	$this->js = $array['js']||false;
+	$this->comment = $array['comment']||false;
+	$this->comments = $array['comments']||true;
+	$this->html = $this->minifyHTML($array['html']);
+	if ($this->comment) {
+		$this->html.= "\n" . $this->bottomComment($array['html'], $this->html);
+	}
 
 	/**
      * 解析模板

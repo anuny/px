@@ -20,3 +20,5 @@ $config['THEME']='bootstrap';
 
 //设置网址域名	
 $config['DOMAIN']='3.pxcms.com';
+
+$config['sitename']='pxpool - 像素铺';

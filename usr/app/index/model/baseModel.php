@@ -11,7 +11,8 @@ class baseModel extends controller
 			array('name'=>'首页','url'=>URL_APP.'/'),
 			array('name'=>'清除BOM','url'=>URL_APP.'/tool/clean_bom.html'),
 			array('name'=>'清除缓存','url'=>URL_APP.'/tool.html'),
-			array('name'=>'评论','url'=>URL_APP.'/comment.html')
+			array('name'=>'评论','url'=>URL_APP.'/comment.html'),
+			array('name'=>'设置','url'=>URL_APP.'/setting.html')
 		);
 		$this->data['nav'] = $nav;
     }

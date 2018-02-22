@@ -50,6 +50,10 @@ class view
 			$content = file_get_contents($tplFile);
 			$content = $this->parse($content);
 			
+			if(config::get('MINIFY')){
+				$content = new minify(array('html'=>$content));
+			}
+			
 			// 编译失败
             if(!file_put_contents($compileFile, $content)){
 				new error('Template Error:"' .URI_APP.'->'. $tplName . '"compilation fails!', 500) ;
@@ -102,8 +106,6 @@ class view
 		
 		$tpl = preg_replace ( "/\{(\\$[a-z0-9_]+)\::([a-z0-9_]+)\}/i", "<?php $1::$2; ?>", $tpl);
 		$tpl = preg_replace ( "/\{(\\$[a-z0-9_]+)\::([a-z0-9_]+)\.([a-z0-9_]+)\}/i", "<?php echo $1::\'$2\'][\'$3\']; ?>", $tpl);
-	
-		//return new minify(array('html'=>$tpl));
 		return $tpl;
 	}
 	
